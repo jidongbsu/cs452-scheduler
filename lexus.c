@@ -85,16 +85,21 @@ void lexus_register(struct lottery_struct lottery){
 void lexus_unregister(struct lottery_struct lottery){
 }
 
-/* executes a context switch: pick a task and dispatch it to the Linux CFS scheduler */
+/* executes a context switch: pick a task and dispatch it to the Linux CFS scheduler.
+ * note: the parameter data won't be used in this program. */
 int lexus_schedule(void *data)
 {
 	while(!kthread_should_stop()){
 		printk(KERN_ERR "hello scheduler\n");
+		// let the dispatch kthread sleep
+		set_current_state(TASK_INTERRUPTIBLE);
+		schedule();
 	}
 	return 0;
 }
 
-/* handle ioctl system calls */
+/* handle ioctl system calls.
+ * note: the parameter filp won't be used in this program.  */
 static long lexus_dev_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
 {
 	return 0;
